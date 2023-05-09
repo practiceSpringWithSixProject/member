@@ -4,13 +4,40 @@
 
 ### column
 1. email
+1. password
+1. nickname
+1. sex
+1. birth
+
+
 ### 연관 테이블
+1. personality
+1. point
+1. feed
+1. likes
+1. subscribe
+1. preperence
 
 ## 기능
 
 ### 로그인
+1. 필수
+    1. email
+    1. password
 ### 회원가입
+1. 필수
+    1. email
+    1. password
+    1. nickname
+    1. birth
+1. 옵션
+    1. sex
+    1. personality
+
 ### 로그아웃
+1. 필수
+    1. email
+    1. password
 ### 회원탈퇴
 
 ## 주의 사항
