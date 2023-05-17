@@ -1,6 +1,7 @@
 package com.fromapril.member.model.feed;
 
 import com.fromapril.member.model.member.Member;
+import com.fromapril.member.model.timeStamp.Timestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Feed {
+public class Feed extends Timestamp {
   //실제 entity 클래스
   //포스트 - 게시글이 구성해야하는 요소들
   // 타임라인 - 포스트들의 리스트들을 보여주는애

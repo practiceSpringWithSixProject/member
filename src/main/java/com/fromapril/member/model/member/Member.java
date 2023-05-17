@@ -8,12 +8,13 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fromapril.member.model.timeStamp.Timestamp;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+public class Member extends Timestamp {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
