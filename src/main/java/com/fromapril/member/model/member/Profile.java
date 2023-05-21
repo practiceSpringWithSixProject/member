@@ -1,10 +1,6 @@
 package com.fromapril.member.model.member;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +13,7 @@ public class Profile {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name="profile_id")
   private Long id;
 
   @Column
@@ -27,5 +24,8 @@ public class Profile {
 
   @Column
   private String personalStatus;
+
+  @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
+  private Member member;
 
 }

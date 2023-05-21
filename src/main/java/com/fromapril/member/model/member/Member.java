@@ -1,14 +1,14 @@
 package com.fromapril.member.model.member;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fromapril.member.model.feed.Feed;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fromapril.member.model.timeStamp.Timestamp;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,6 +18,7 @@ public class Member extends Timestamp {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name="member_id")
   private Long id;
 
   @Column
@@ -28,5 +29,12 @@ public class Member extends Timestamp {
 
   @Column
   private boolean isLeaved;
+
+  @OneToOne(fetch=FetchType.LAZY)
+  @JoinColumn(name="profile_id")
+  private Profile profile;
+
+  @OneToMany(mappedBy = "member")
+  private List<Feed> feedList = new ArrayList<>();
 
 }
