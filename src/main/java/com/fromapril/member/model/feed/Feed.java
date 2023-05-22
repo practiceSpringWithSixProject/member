@@ -28,4 +28,10 @@ public class Feed extends Timestamp {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
   private Member member;
+
+  //==생성 편의 메소드==//
+  public void setMember(Member member) {
+    this.member = member;
+    member.getFeedList().add(this);
+  }
 }
