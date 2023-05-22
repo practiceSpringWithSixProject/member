@@ -26,5 +26,4 @@ public class Profile {
 
   @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
   private Member member;
-
 }

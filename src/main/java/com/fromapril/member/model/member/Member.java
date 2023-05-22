@@ -2,18 +2,16 @@ package com.fromapril.member.model.member;
 
 import com.fromapril.member.model.feed.Feed;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.fromapril.member.model.timeStamp.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor(access=AccessLevel.PROTECTED)
 @Data
-@NoArgsConstructor
 @Entity
 public class Member extends Timestamp {
 
@@ -38,4 +36,19 @@ public class Member extends Timestamp {
   @OneToMany(mappedBy = "member")
   private List<Feed> feedList = new ArrayList<>();
 
+  //==연관 관계 편의 메소드==//
+  public void setProfile(Profile profile) {
+    this.profile = profile;
+    profile.setMember(this);
+  }
+
+  //==생성 메소드==//
+  public static Member createMember(String email, String password) {
+    Member member = new Member();
+    member.setEmail(email);
+    member.setPassword(password);
+    member.setLeaved(false);
+
+    return member;
+  }
 }
