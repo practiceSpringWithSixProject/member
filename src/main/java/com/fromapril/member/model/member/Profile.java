@@ -5,10 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-@Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Data
+@Entity
 public class Profile {
 
   @Id

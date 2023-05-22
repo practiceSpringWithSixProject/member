@@ -4,16 +4,17 @@ import com.fromapril.member.model.feed.Feed;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import com.fromapril.member.model.timeStamp.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@EqualsAndHashCode(callSuper = true)
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Member extends Timestamp {
 
   @Id

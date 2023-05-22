@@ -5,10 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-@Entity
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
+@Entity
 public class PointUseDetail {
 
 

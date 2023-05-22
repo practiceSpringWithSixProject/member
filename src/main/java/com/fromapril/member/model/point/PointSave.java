@@ -8,10 +8,9 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
+@Entity
 public class PointSave {
 
   @Id

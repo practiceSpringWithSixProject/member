@@ -5,12 +5,13 @@ import com.fromapril.member.model.timeStamp.Timestamp;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Data
+@NoArgsConstructor
+@Entity
 public class Feed extends Timestamp {
   //실제 entity 클래스
   //포스트 - 게시글이 구성해야하는 요소들
@@ -27,6 +28,4 @@ public class Feed extends Timestamp {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
   private Member member;
-
-
 }
