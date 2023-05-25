@@ -1,15 +1,14 @@
-package com.fromapril.member.model.member;
+package com.fromapril.member.domain.member;
 
 import com.fromapril.member.dto.MemberIdentifyDto;
-import com.fromapril.member.model.feed.Feed;
+import com.fromapril.member.domain.feed.Feed;
 import jakarta.persistence.*;
 import lombok.*;
-import com.fromapril.member.model.timeStamp.Timestamp;
+import com.fromapril.member.domain.timeStamp.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access=AccessLevel.PROTECTED)

@@ -1,4 +1,4 @@
-package com.fromapril.member.model.timeStamp;
+package com.fromapril.member.domain.timeStamp;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

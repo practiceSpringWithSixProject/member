@@ -1,4 +1,4 @@
-package com.fromapril.member.model.point;
+package com.fromapril.member.domain.point;
 
 public enum PointUseStatus {
     USED,

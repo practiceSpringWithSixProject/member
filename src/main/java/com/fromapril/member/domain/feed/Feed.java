@@ -1,9 +1,8 @@
-package com.fromapril.member.model.feed;
+package com.fromapril.member.domain.feed;
 
-import com.fromapril.member.model.member.Member;
-import com.fromapril.member.model.timeStamp.Timestamp;
+import com.fromapril.member.domain.member.Member;
+import com.fromapril.member.domain.timeStamp.Timestamp;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

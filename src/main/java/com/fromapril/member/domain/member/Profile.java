@@ -1,9 +1,8 @@
-package com.fromapril.member.model.member;
+package com.fromapril.member.domain.member;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @NoArgsConstructor
 @Data

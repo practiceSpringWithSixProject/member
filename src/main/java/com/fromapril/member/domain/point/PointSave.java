@@ -1,32 +1,30 @@
-package com.fromapril.member.model.point;
+package com.fromapril.member.domain.point;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @Entity
-public class PointUse {
+public class PointSave {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "point_use_id")
+  @Column(name = "point_save_id")
   private Long id;
 
-  @Column
   private Integer point;
 
-  @Column
+  private Integer balance;
   private String memo;
-
-  @Column
   private LocalDateTime regDate;
+  private LocalDateTime expDate;
 
   @Column
-  @Enumerated(value = EnumType.STRING)
-  private PointUseStatus status;
+  @Enumerated(value=EnumType.STRING)
+  private PointSaveStaus status;
+
 }
