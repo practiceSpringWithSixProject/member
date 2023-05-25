@@ -2,17 +2,14 @@ package com.fromapril.member.service;
 
 import com.fromapril.member.dto.MemberIdentifyDto;
 import com.fromapril.member.dto.MemberJoinDTO;
-import com.fromapril.member.model.member.Profile;
+import com.fromapril.member.domain.member.Profile;
 import com.fromapril.member.repository.MemberRepository;
 import com.fromapril.member.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fromapril.member.model.member.Member;
-
-import java.util.Objects;
-import java.util.Optional;
+import com.fromapril.member.domain.member.Member;
 
 
 @Service

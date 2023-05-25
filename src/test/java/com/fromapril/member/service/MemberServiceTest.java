@@ -2,11 +2,10 @@ package com.fromapril.member.service;
 
 import com.fromapril.member.dto.MemberIdentifyDto;
 import com.fromapril.member.dto.MemberJoinDTO;
-import com.fromapril.member.model.member.Member;
-import com.fromapril.member.model.member.Profile;
+import com.fromapril.member.domain.member.Member;
+import com.fromapril.member.domain.member.Profile;
 import com.fromapril.member.repository.MemberRepository;
 import com.fromapril.member.repository.ProfileRepository;
-import jakarta.persistence.Column;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

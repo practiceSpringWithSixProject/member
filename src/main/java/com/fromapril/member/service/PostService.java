@@ -1,7 +1,7 @@
 package com.fromapril.member.service;
 
-import com.fromapril.member.model.feed.Feed;
-import com.fromapril.member.model.member.Member;
+import com.fromapril.member.domain.feed.Feed;
+import com.fromapril.member.domain.member.Member;
 import com.fromapril.member.repository.FeedRepository;
 import com.fromapril.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
