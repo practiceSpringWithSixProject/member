@@ -1,5 +1,6 @@
 package com.fromapril.member.model.member;
 
+import com.fromapril.member.dto.MemberIdentifyDto;
 import com.fromapril.member.model.feed.Feed;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,6 +8,7 @@ import com.fromapril.member.model.timeStamp.Timestamp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @EqualsAndHashCode(callSuper = true)
@@ -50,5 +52,10 @@ public class Member extends Timestamp {
     member.setLeaved(false);
 
     return member;
+  }
+
+  //==비지니스 로직==//
+  public boolean isEquals(MemberIdentifyDto memberIdentifyDto) {
+    return Objects.equals(this.email, memberIdentifyDto.getEmail()) && Objects.equals(this.password, memberIdentifyDto.getPassword());
   }
 }

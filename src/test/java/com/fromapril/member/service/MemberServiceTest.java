@@ -105,4 +105,17 @@ class MemberServiceTest {
         assertThrows(IllegalArgumentException.class, () -> memberService.leave(memberIdentifyDto));
     }
 
+    @Test
+    public void 지만_조회_가능함() {
+        String memberEmail = "hello@local.com";
+        String memberPassword = "hello";
+        Member member = Member.createMember(memberEmail, memberPassword);
+        memberRepository.save(member);
+
+        MemberIdentifyDto memberIdentifyDto = new MemberIdentifyDto(memberEmail, memberPassword);
+        Member memberSelf = memberService.mine(memberIdentifyDto);
+
+        assertEquals(member.getId(), memberSelf.getId());
+        assertThrows(IllegalArgumentException.class, () -> memberService.mine(new MemberIdentifyDto(memberEmail, memberPassword + "hhhh")));
+    }
 }

@@ -49,9 +49,7 @@ public class MemberService {
     public Long leave(MemberIdentifyDto memberIdentifyDto) {
         Member member = memberRepository.findByEmail(memberIdentifyDto.getEmail()).orElseThrow();
 
-        if(!Objects.equals(member.getPassword(), memberIdentifyDto.getPassword())) {
-            throw new IllegalArgumentException("주인만 지울 수 있음");
-        }
+        validateIsTheMember(memberIdentifyDto, member);
 
         if(member.isLeaved()) {
             throw new IllegalArgumentException("이미 떠난자임");
@@ -61,5 +59,19 @@ public class MemberService {
         memberRepository.save(member);
 
         return member.getId();
+    }
+
+    public Member mine(MemberIdentifyDto memberIdentifyDto) {
+        Member member = memberRepository.findByEmail(memberIdentifyDto.getEmail()).orElseThrow();
+
+        validateIsTheMember(memberIdentifyDto, member);
+
+        return member;
+    }
+
+    private static void validateIsTheMember(MemberIdentifyDto memberIdentifyDto, Member member) {
+        if(!member.isEquals(memberIdentifyDto)) {
+            throw new IllegalArgumentException("주인 아님");
+        }
     }
 }
