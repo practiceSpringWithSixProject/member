@@ -1,0 +1,17 @@
+package com.fromapril.member.dto;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import java.util.Objects;
+
+@RequiredArgsConstructor
+@Getter
+public class MemberIdentifyDto {
+    private final String email;
+    private final String password;
+
+    public Boolean isEquals(MemberIdentifyDto memberIdentifyDto) {
+        return Objects.equals(email, memberIdentifyDto.email) && Objects.equals(password, memberIdentifyDto.password);
+    }
+}

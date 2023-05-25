@@ -20,7 +20,7 @@ public class Member extends Timestamp {
   @Column(name="member_id")
   private Long id;
 
-  @Column
+  @Column(unique = true)
   private String email;
 
   @Column

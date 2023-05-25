@@ -1,5 +1,7 @@
 package com.fromapril.member.service;
 
+import com.fromapril.member.dto.MemberIdentifyDto;
+import com.fromapril.member.dto.MemberJoinDTO;
 import com.fromapril.member.model.member.Member;
 import com.fromapril.member.model.member.Profile;
 import com.fromapril.member.repository.MemberRepository;
@@ -25,14 +27,21 @@ class MemberServiceTest {
         // given
         String memberEmail = "hello@local.com";
         String memberPassword = "hello";
-        Member member = Member.createMember(memberEmail, memberPassword);
+        String nickname = "1";
+        String thumbnailUrl = "2";
+        String personalStatus = "3";
+        MemberJoinDTO memberJoinDTO = new MemberJoinDTO(memberEmail, memberPassword, nickname, thumbnailUrl, personalStatus);
 
         // when
-        memberService.join(member);
+        memberService.join(memberJoinDTO);
         Member foundMember = memberRepository.findByEmail(memberEmail).orElseThrow();
 
         // then
-        assertEquals(member.getId(), foundMember.getId());
+        assertEquals(memberEmail, foundMember.getEmail());
+        assertEquals(memberPassword, foundMember.getPassword());
+        assertEquals(nickname, foundMember.getProfile().getNickname());
+        assertEquals(thumbnailUrl, foundMember.getProfile().getThumbnailImage());
+        assertEquals(personalStatus, foundMember.getProfile().getPersonalStatus());
     }
 
 
@@ -59,6 +68,41 @@ class MemberServiceTest {
         assertEquals(member.getProfile().getMember(), member);
     }
 
-    // util //
+    @Test
+    public void 회원탈퇴() {
+        String memberEmail = "hello@local.com";
+        String memberPassword = "hello";
+        Member member = Member.createMember(memberEmail, memberPassword);
+        memberRepository.save(member);
+
+        MemberIdentifyDto memberIdentifyDto = new MemberIdentifyDto(memberEmail, memberPassword);
+        memberService.leave(memberIdentifyDto);
+
+        Member foundMember = memberRepository.findById(member.getId()).orElseThrow();
+        assertTrue(foundMember.isLeaved());
+    }
+
+    @Test
+    public void 비밀번호틀리면_탈퇴_못함() {
+        String memberEmail = "hello@local.com";
+        String memberPassword = "hello";
+        Member member = Member.createMember(memberEmail, memberPassword);
+        memberRepository.save(member);
+
+        MemberIdentifyDto memberIdentifyDto = new MemberIdentifyDto(memberEmail, memberPassword + "hhhh");
+        assertThrows(IllegalArgumentException.class, () -> memberService.leave(memberIdentifyDto));
+    }
+
+    @Test
+    public void 이미_탈퇴하면_탈퇴_못함() {
+        String memberEmail = "hello@local.com";
+        String memberPassword = "hello";
+        Member member = Member.createMember(memberEmail, memberPassword);
+        member.setLeaved(true);
+        memberRepository.save(member);
+
+        MemberIdentifyDto memberIdentifyDto = new MemberIdentifyDto(memberEmail, memberPassword + "hhhh");
+        assertThrows(IllegalArgumentException.class, () -> memberService.leave(memberIdentifyDto));
+    }
 
 }
