@@ -7,19 +7,22 @@ import com.fromapril.member.domain.member.MemberBlockContent;
 import com.fromapril.member.repository.FeedRepository;
 import com.fromapril.member.repository.MemberBlockContentRepository;
 import com.fromapril.member.repository.MemberRepository;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(
+)
 @Transactional
-class PostServiceTest {
+public class PostServiceTest {
     @Autowired FeedRepository feedRepository;
     @Autowired MemberRepository memberRepository;
     @Autowired MemberBlockContentRepository memberBlockContentRepository;

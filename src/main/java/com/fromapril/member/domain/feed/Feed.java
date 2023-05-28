@@ -3,13 +3,16 @@ package com.fromapril.member.domain.feed;
 import com.fromapril.member.domain.member.Member;
 import com.fromapril.member.domain.timeStamp.Timestamp;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Entity
 public class Feed extends Timestamp {
   //실제 entity 클래스
@@ -25,7 +28,7 @@ public class Feed extends Timestamp {
   private String content;
 
   @Column
-  private Boolean isDeleted = false;
+  private Boolean isDeleted;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
@@ -35,5 +38,17 @@ public class Feed extends Timestamp {
   public void setMember(Member member) {
     this.member = member;
     member.getFeedList().add(this);
+  }
+
+  //== 생성 메서드 ==//
+  public static Feed createFeed(String content, Member member) {
+    Feed feed = new Feed() ;
+    feed.setContent(content);
+    feed.setMember(member);
+    feed.setIsDeleted(false);
+    feed.setCreatedAt(LocalDateTime.now());
+    feed.setModifiedAt(LocalDateTime.now());
+
+    return feed;
   }
 }

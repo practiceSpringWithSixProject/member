@@ -8,10 +8,15 @@ import com.fromapril.member.repository.FeedRepository;
 import com.fromapril.member.repository.MemberBlockContentRepository;
 import com.fromapril.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,16 +30,15 @@ public class PostService {
     public Long write(Long memberId, String content) {
         Member member = memberRepository.findById(memberId).orElseThrow();
 
-        Feed newFeed = new Feed();
-        newFeed.setContent(content);
-        newFeed.setMember(member);
+        Feed newFeed = Feed.createFeed(content, member);
 
         feedRepository.save(newFeed);
+
         return newFeed.getId();
     }
 
     @Transactional
-    public Long update(Long memberId, Long feedId, String content) {
+    public void update(Long memberId, Long feedId, String content) {
         Feed feedToUpdate = feedRepository.findById(feedId).orElseThrow();
 
         validateIsFeedOwner(memberId, feedToUpdate);
@@ -42,7 +46,6 @@ public class PostService {
         feedToUpdate.setContent(content);
         feedRepository.save(feedToUpdate);
 
-        return feedToUpdate.getId();
     }
 
     @Transactional
@@ -71,6 +74,7 @@ public class PostService {
 
         memberBlockContentRepository.save(memberBlockContent);
     }
+
 
     private static void validateIsFeedOwner(Long memberId, Feed feedToUpdate) {
         if(!Objects.equals(feedToUpdate.getMember().getId(), memberId)) {
