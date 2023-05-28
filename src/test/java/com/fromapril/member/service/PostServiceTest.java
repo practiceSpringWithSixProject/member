@@ -1,8 +1,11 @@
 package com.fromapril.member.service;
 
 import com.fromapril.member.domain.feed.Feed;
+import com.fromapril.member.domain.member.BlockContentType;
 import com.fromapril.member.domain.member.Member;
+import com.fromapril.member.domain.member.MemberBlockContent;
 import com.fromapril.member.repository.FeedRepository;
+import com.fromapril.member.repository.MemberBlockContentRepository;
 import com.fromapril.member.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -18,9 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class PostServiceTest {
     @Autowired FeedRepository feedRepository;
     @Autowired MemberRepository memberRepository;
+    @Autowired MemberBlockContentRepository memberBlockContentRepository;
     @Autowired PostService postService;
-
-
     @Test
     public void 피드생성() {
         Member member = memberRepository.save(Member.createMember("1", "2"));
@@ -69,6 +72,29 @@ class PostServiceTest {
         Long feedId = postService.write(member.getId(), "3");
 
         assertThrows(IllegalAccessError.class, () -> postService.delete(member.getId() + 1, feedId));
+    }
+
+    @Test
+    public void 피드_가리기는_여러개_가능() {
+        Member member = memberRepository.save(Member.createMember("1", "2"));
+        Long feedId1 = postService.write(member.getId(), "1");
+        Long feedId2 = postService.write(member.getId(), "2");
+        Long feedId3 = postService.write(member.getId(), "3");
+
+        postService.hidePost(member.getId(), feedId1);
+        postService.hidePost(member.getId(), feedId2);
+        postService.hidePost(member.getId(), feedId3);
+
+        MemberBlockContent memberBlockContent = memberBlockContentRepository.findByMemberIdAndType(
+                member.getId(),
+                BlockContentType.POST
+        ).orElseThrow();
+
+        assertThat(memberBlockContent.getBannedContentIdList()).containsExactlyInAnyOrder(
+                feedId1,
+                feedId2,
+                feedId3
+        );
     }
 
 }

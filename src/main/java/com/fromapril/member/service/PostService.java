@@ -1,8 +1,11 @@
 package com.fromapril.member.service;
 
 import com.fromapril.member.domain.feed.Feed;
+import com.fromapril.member.domain.member.BlockContentType;
 import com.fromapril.member.domain.member.Member;
+import com.fromapril.member.domain.member.MemberBlockContent;
 import com.fromapril.member.repository.FeedRepository;
+import com.fromapril.member.repository.MemberBlockContentRepository;
 import com.fromapril.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +19,9 @@ import java.util.Objects;
 public class PostService {
     private final FeedRepository feedRepository;
     private final MemberRepository memberRepository;
+    private final MemberBlockContentRepository memberBlockContentRepository;
 
+    @Transactional
     public Long write(Long memberId, String content) {
         Member member = memberRepository.findById(memberId).orElseThrow();
 
@@ -28,6 +33,7 @@ public class PostService {
         return newFeed.getId();
     }
 
+    @Transactional
     public Long update(Long memberId, Long feedId, String content) {
         Feed feedToUpdate = feedRepository.findById(feedId).orElseThrow();
 
@@ -39,12 +45,31 @@ public class PostService {
         return feedToUpdate.getId();
     }
 
+    @Transactional
     public void delete(Long memberId, Long feedId) {
         Feed feedToDelete = feedRepository.findById(feedId).orElseThrow();
 
         validateIsFeedOwner(memberId, feedToDelete);
 
         feedToDelete.setIsDeleted(true);
+    }
+
+    @Transactional
+    public void hidePost(Long memberId, Long feedId) {
+        MemberBlockContent memberBlockContent = memberBlockContentRepository.findByMemberIdAndType(
+                memberId,
+                BlockContentType.POST
+        ).orElseGet(() -> {
+            MemberBlockContent mbc = new MemberBlockContent();
+            mbc.setMemberId(memberId);
+            mbc.setBlockContentType(BlockContentType.POST);
+
+            return mbc;
+        });
+
+        memberBlockContent.getBannedContentIdList().add(feedId);
+
+        memberBlockContentRepository.save(memberBlockContent);
     }
 
     private static void validateIsFeedOwner(Long memberId, Feed feedToUpdate) {

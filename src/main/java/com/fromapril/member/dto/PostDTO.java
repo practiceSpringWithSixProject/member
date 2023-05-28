@@ -10,11 +10,9 @@ import java.lang.reflect.Member;
 @Getter
 @RequiredArgsConstructor
 public class PostDTO {
+    private final Integer feedId;
     private final String content;
     private final String nickname;
     private final String thumbnailImage;
 
-    public static PostDTO fromEntity(Feed feed, Profile profile) {
-        return new PostDTO(feed.getContent(), profile.getNickname(), profile.getThumbnailImage());
-    }
 }
