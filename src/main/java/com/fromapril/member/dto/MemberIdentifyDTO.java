@@ -7,11 +7,11 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 @Getter
-public class MemberIdentifyDto {
+public class MemberIdentifyDTO {
     private final String email;
     private final String password;
 
-    public Boolean isEquals(MemberIdentifyDto memberIdentifyDto) {
+    public Boolean isEquals(MemberIdentifyDTO memberIdentifyDto) {
         return Objects.equals(email, memberIdentifyDto.email) && Objects.equals(password, memberIdentifyDto.password);
     }
 }

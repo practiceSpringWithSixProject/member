@@ -24,6 +24,9 @@ public class Feed extends Timestamp {
   @Column
   private String content;
 
+  @Column
+  private Boolean isDeleted = false;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
   private Member member;

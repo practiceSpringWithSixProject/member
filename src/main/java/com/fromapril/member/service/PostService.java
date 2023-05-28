@@ -44,7 +44,7 @@ public class PostService {
 
         validateIsFeedOwner(memberId, feedToDelete);
 
-        feedRepository.delete(feedToDelete);
+        feedToDelete.setIsDeleted(true);
     }
 
     private static void validateIsFeedOwner(Long memberId, Feed feedToUpdate) {

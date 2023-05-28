@@ -1,6 +1,6 @@
 package com.fromapril.member.service;
 
-import com.fromapril.member.dto.MemberIdentifyDto;
+import com.fromapril.member.dto.MemberIdentifyDTO;
 import com.fromapril.member.dto.MemberJoinDTO;
 import com.fromapril.member.domain.member.Member;
 import com.fromapril.member.domain.member.Profile;
@@ -9,6 +9,7 @@ import com.fromapril.member.repository.ProfileRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,17 +44,83 @@ class MemberServiceTest {
         assertEquals(personalStatus, foundMember.getProfile().getPersonalStatus());
     }
 
+    @Test
+    public void 회원가입_할_때_이메일은_유일해야_함() {
+        // given
+        String memberEmail = "hello@local.com";
+        String memberPassword = "hello";
+        String nickname = "1";
+        String thumbnailUrl = "2";
+        String personalStatus = "3";
+
+        // when
+        MemberJoinDTO memberJoinDTO = new MemberJoinDTO(memberEmail, memberPassword, nickname, thumbnailUrl, personalStatus);
+        MemberJoinDTO memberJoinDTO2 = new MemberJoinDTO(memberEmail, memberPassword, nickname, thumbnailUrl, personalStatus);
+        memberService.join(memberJoinDTO);
+
+        // then
+        assertThrows(DataIntegrityViolationException.class, () -> memberService.join(memberJoinDTO2));
+    }
+
+    @Test
+    public void 회원가입_할_때_닉네임은_유일해야_함() {
+        // given
+        String memberEmail = "hello@local.com";
+        String memberPassword = "hello";
+        String nickname = "1";
+        String thumbnailUrl = "2";
+        String personalStatus = "3";
+
+        // when
+        MemberJoinDTO memberJoinDTO = new MemberJoinDTO(memberEmail, memberPassword, nickname, thumbnailUrl, personalStatus);
+        MemberJoinDTO memberJoinDTO2 = new MemberJoinDTO("11"+memberEmail, memberPassword, nickname, thumbnailUrl, personalStatus);
+        memberService.join(memberJoinDTO);
+
+        // then
+        assertThrows(IllegalArgumentException.class, () -> memberService.join(memberJoinDTO2));
+    }
+
 
     @Test
     public void 프로필업데이트() {
         String memberEmail = "hello@local.com";
         String memberPassword = "hello";
-        Member member = Member.createMember(memberEmail, memberPassword);
-        memberRepository.save(member);
-
         String nickname = "hello";
         String thumbnailImage = "hello";
         String personalStatus = "whatisthisfor";
+
+        Member member = Member.createMember(memberEmail, memberPassword);
+        memberRepository.save(member);
+        
+        Profile profile = new Profile();
+        profile.setNickname(nickname);
+        profile.setThumbnailImage(thumbnailImage);
+        profile.setPersonalStatus(personalStatus);
+        profileRepository.save(profile);
+
+        MemberJoinDTO memberJoinDTO = new MemberJoinDTO(
+                memberEmail,
+                memberPassword,
+                nickname,
+                thumbnailImage,
+                personalStatus
+        );
+
+        memberService.update(memberJoinDTO);
+
+        assertEquals(member.getProfile(), profile);
+        assertEquals(member.getProfile().getMember(), member);
+    }
+
+    public void 닉네임_겹치면_프로필업데이트_못함() {
+        String memberEmail = "hello@local.com";
+        String memberPassword = "hello";
+        String nickname = "hello";
+        String thumbnailImage = "hello";
+        String personalStatus = "whatisthisfor";
+
+        Member member = Member.createMember(memberEmail, memberPassword);
+        memberRepository.save(member);
 
         Profile profile = new Profile();
         profile.setNickname(nickname);
@@ -61,12 +128,19 @@ class MemberServiceTest {
         profile.setPersonalStatus(personalStatus);
         profileRepository.save(profile);
 
-        memberService.update(member.getId(), profile);
+        MemberJoinDTO memberJoinDTO = new MemberJoinDTO(
+                memberEmail,
+                memberPassword,
+                nickname,
+                thumbnailImage,
+                personalStatus
+        );
 
-        assertEquals(member.getProfile(), profile);
-        assertEquals(member.getProfile().getMember(), member);
+        memberService.update(memberJoinDTO);
+
+
     }
-
+    
     @Test
     public void 회원탈퇴() {
         String memberEmail = "hello@local.com";
@@ -74,7 +148,7 @@ class MemberServiceTest {
         Member member = Member.createMember(memberEmail, memberPassword);
         memberRepository.save(member);
 
-        MemberIdentifyDto memberIdentifyDto = new MemberIdentifyDto(memberEmail, memberPassword);
+        MemberIdentifyDTO memberIdentifyDto = new MemberIdentifyDTO(memberEmail, memberPassword);
         memberService.leave(memberIdentifyDto);
 
         Member foundMember = memberRepository.findById(member.getId()).orElseThrow();
@@ -88,7 +162,7 @@ class MemberServiceTest {
         Member member = Member.createMember(memberEmail, memberPassword);
         memberRepository.save(member);
 
-        MemberIdentifyDto memberIdentifyDto = new MemberIdentifyDto(memberEmail, memberPassword + "hhhh");
+        MemberIdentifyDTO memberIdentifyDto = new MemberIdentifyDTO(memberEmail, memberPassword + "hhhh");
         assertThrows(IllegalArgumentException.class, () -> memberService.leave(memberIdentifyDto));
     }
 
@@ -100,7 +174,7 @@ class MemberServiceTest {
         member.setLeaved(true);
         memberRepository.save(member);
 
-        MemberIdentifyDto memberIdentifyDto = new MemberIdentifyDto(memberEmail, memberPassword + "hhhh");
+        MemberIdentifyDTO memberIdentifyDto = new MemberIdentifyDTO(memberEmail, memberPassword + "hhhh");
         assertThrows(IllegalArgumentException.class, () -> memberService.leave(memberIdentifyDto));
     }
 
@@ -111,10 +185,10 @@ class MemberServiceTest {
         Member member = Member.createMember(memberEmail, memberPassword);
         memberRepository.save(member);
 
-        MemberIdentifyDto memberIdentifyDto = new MemberIdentifyDto(memberEmail, memberPassword);
+        MemberIdentifyDTO memberIdentifyDto = new MemberIdentifyDTO(memberEmail, memberPassword);
         Member memberSelf = memberService.mine(memberIdentifyDto);
 
         assertEquals(member.getId(), memberSelf.getId());
-        assertThrows(IllegalArgumentException.class, () -> memberService.mine(new MemberIdentifyDto(memberEmail, memberPassword + "hhhh")));
+        assertThrows(IllegalArgumentException.class, () -> memberService.mine(new MemberIdentifyDTO(memberEmail, memberPassword + "hhhh")));
     }
 }

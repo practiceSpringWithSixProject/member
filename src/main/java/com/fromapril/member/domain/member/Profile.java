@@ -1,5 +1,6 @@
 package com.fromapril.member.domain.member;
 
+import com.fromapril.member.dto.ProfileDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,11 +28,20 @@ public class Profile {
   private Member member;
 
   //==생성 메소드==//
-  public static Profile createProfile(String nickname, String thumbnailImage, String personalStatus) {
+  public static Profile createProfile(ProfileDTO profileDTO) {
     Profile profile = new Profile();
-    profile.setNickname(nickname);
-    profile.setThumbnailImage(thumbnailImage);
-    profile.setPersonalStatus(personalStatus);
+    profile.setNickname(profileDTO.getNickname());
+    profile.setThumbnailImage(profileDTO.getThumbnailImage());
+    profile.setPersonalStatus(profileDTO.getPersonalStatus());
+
+    return profile;
+  }
+
+  //==비지니스 로직==//
+  public Profile update(Profile profile, ProfileDTO profileDTO) {
+    profile.setNickname(profileDTO.getNickname());
+    profile.setThumbnailImage(profileDTO.getThumbnailImage());
+    profile.setPersonalStatus(profileDTO.getPersonalStatus());
 
     return profile;
   }

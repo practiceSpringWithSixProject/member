@@ -1,6 +1,6 @@
 package com.fromapril.member.service;
 
-import com.fromapril.member.dto.MemberIdentifyDto;
+import com.fromapril.member.dto.MemberIdentifyDTO;
 import com.fromapril.member.dto.MemberJoinDTO;
 import com.fromapril.member.domain.member.Profile;
 import com.fromapril.member.repository.MemberRepository;
@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fromapril.member.domain.member.Member;
+
+import java.util.Objects;
+import java.util.Optional;
 
 
 @Service
@@ -23,8 +26,9 @@ public class MemberService {
     public Long join(MemberJoinDTO memberJoinDTO) {
 
         Member member = Member.createMember(memberJoinDTO.getEmail(), memberJoinDTO.getPassword());
-        Profile profile = Profile.createProfile(memberJoinDTO.getNickname(), memberJoinDTO.getThumbnailImage(), memberJoinDTO.getPersonalStatus());
+        Profile profile = Profile.createProfile(memberJoinDTO.getProfile());
         member.setProfile(profile);
+        validateIsUniqueNickname(profile);
 
         memberRepository.save(member);
         profileRepository.save(profile);
@@ -33,17 +37,25 @@ public class MemberService {
     }
 
     @Transactional
-    public Long update(Long memberId, Profile profile) {
+    public Long update(MemberJoinDTO memberJoinDTO) {
 
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        Member member = memberRepository
+                .findByEmail(memberJoinDTO.getEmail()).orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        validateIsTheMember(memberJoinDTO, member);
+
+        Profile profile = member.getProfile();
+        profile.update(profile, memberJoinDTO.getProfile());
         member.setProfile(profile);
+
+        validateIsUniqueNickname(profile);
+
         memberRepository.save(member);
 
         return member.getId();
     }
 
     @Transactional
-    public Long leave(MemberIdentifyDto memberIdentifyDto) {
+    public void leave(MemberIdentifyDTO memberIdentifyDto) {
         Member member = memberRepository.findByEmail(memberIdentifyDto.getEmail()).orElseThrow();
 
         validateIsTheMember(memberIdentifyDto, member);
@@ -54,11 +66,9 @@ public class MemberService {
 
         member.setLeaved(true);
         memberRepository.save(member);
-
-        return member.getId();
     }
 
-    public Member mine(MemberIdentifyDto memberIdentifyDto) {
+    public Member mine(MemberIdentifyDTO memberIdentifyDto) {
         Member member = memberRepository.findByEmail(memberIdentifyDto.getEmail()).orElseThrow();
 
         validateIsTheMember(memberIdentifyDto, member);
@@ -66,7 +76,21 @@ public class MemberService {
         return member;
     }
 
-    private static void validateIsTheMember(MemberIdentifyDto memberIdentifyDto, Member member) {
+    private void validateIsUniqueNickname(Profile profile) {
+        Optional<Profile> foundProfile = profileRepository.findByNickname(profile.getNickname());
+
+        if (foundProfile.isEmpty()) {
+            return;
+        }
+
+        if (Objects.equals(profile.getId(), foundProfile.get().getId())) {
+            return;
+        }
+
+        throw new IllegalArgumentException("닉네임 중복");
+    }
+
+    private static void validateIsTheMember(MemberIdentifyDTO memberIdentifyDto, Member member) {
         if(!member.isEquals(memberIdentifyDto)) {
             throw new IllegalArgumentException("주인 아님");
         }

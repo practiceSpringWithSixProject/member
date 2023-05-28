@@ -1,6 +1,6 @@
 package com.fromapril.member.domain.member;
 
-import com.fromapril.member.dto.MemberIdentifyDto;
+import com.fromapril.member.dto.MemberIdentifyDTO;
 import com.fromapril.member.domain.feed.Feed;
 import jakarta.persistence.*;
 import lombok.*;
@@ -54,7 +54,7 @@ public class Member extends Timestamp {
   }
 
   //==비지니스 로직==//
-  public boolean isEquals(MemberIdentifyDto memberIdentifyDto) {
+  public boolean isEquals(MemberIdentifyDTO memberIdentifyDto) {
     return Objects.equals(this.email, memberIdentifyDto.getEmail()) && Objects.equals(this.password, memberIdentifyDto.getPassword());
   }
 }
